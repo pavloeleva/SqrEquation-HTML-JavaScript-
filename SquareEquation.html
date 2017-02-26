@@ -1,0 +1,254 @@
+<!Doctype HTML>
+<html>
+  <head>
+	  <title>Квадратне рівняння</title>
+	  <meta charset="utf-8"/>	  
+	  
+	  
+	  
+  	  <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+	  </script>
+	  
+	  <style>
+		  body {
+			  font-family: sans-serif;
+			  /* background-color: #bbb; */
+			  text-align: center;
+			  /*color: blue; /* #217AC0;    */ 
+			  font-size: 14px;
+		  }
+		  		  
+		  #input_Form {
+			  width: 35%; 
+			  margin: auto; 
+			  color: #ffffff; 
+			  font-family: arial;
+			  font-size: 16px; 	
+			  padding: 16px;				  
+			  background-color: #217AC0; 
+			  
+		  }	
+		  
+		  h1{
+			  text-align: center; 
+			  font-weight: 100;  
+			  letter-spacing: 0.1em;
+		  }
+		  
+		  .frm_label {
+			  font-weight: bold;
+			  font-style: italic;
+		  }
+		  
+		  .footnote{
+			  text-align: left;
+			  padding: 0;
+			  margin: 0;
+			  font-size: 0.8em;
+			  font-weight: 100;
+			  color: lightgray;
+		  }
+		  
+	  </style>
+	  
+	  <script>
+		  var my_div = null, //DIV  для виводу розв'язання
+			  replaceRoots, // чи мінялися корені місцями
+			  numA,  // коефіцієнт 'а' квадратного рівняння
+			  numB,  // коефіцієнт 'b' квадратного рівняння
+			  numC,  // вільний члент 'с' квадратного рівняння
+			  discr, // дискримыінант
+			  x1,    // значення першого кореня, або стрічка "Коренів немає"
+			  x2;	 // значення другого кореня, або "", якщо його немає
+			  
+		 function isNumeric(n) {
+  			return !isNaN(parseFloat(n)) && isFinite(n)
+		 };
+		 
+		 // число - член виразу [   NUM   або (-NUM)   ] 
+		 function memberOfExpr(num) {
+			 return (num >= 0) ? unsignMathJax(num) : "(-" + unsignMathJax((num)) + ")";		 
+		 };
+		 
+		 // число, позбавлене знаку у форматі MathJax [ INT{,}DEC   ]
+		 function unsignMathJax(numValue) {
+			 return "\\text{" + ( +Math.abs(numValue) ).toLocaleString() + "}";
+		 };
+		  
+		  
+		 // перевіряємо, чи вже є у документі відповідь
+		 //і якщо є - знищуєм
+		 function clearMyDiv() {			 			 	
+			 if (document.getElementById("root_div")) {
+				document.getElementById("root_div").parentNode.removeChild(document.getElementById("root_div"));
+			};
+		 };
+		 
+		  
+		  // заміна десяткової коми на крапку для JavaScript
+		 function putDotDecSeparator(valStr) {
+			var i = valStr.indexOf(",");		
+			return (i === -1) ? valStr : valStr.substring(0, i) + 
+				"." + valStr.substring(i + 1, valStr.length);			
+		 };
+		  
+		 
+		 function putCommaDecSeparator(valStr) {
+			var i = valStr.indexOf(".");
+			 return (i === -1) ? valStr : valStr.substring(0, i) + 
+				 "," + valStr.substring(i + 1, valStr.length);
+		 };
+		  
+		  
+		 function getA(numValue) {
+			 var num
+			 num = putDotDecSeparator(numValue);
+			 while ( ( num == 0 ) || (!isNumeric(num)) ) {
+				 num = (num == 0) ? 
+				   putDotDecSeparator( prompt("Помилка!\nКоефіцієнт a не може дорівнювати нулю!" + 
+							"\nВведіть корректне значення: ", "") ) : 
+				   putDotDecSeparator( prompt("Помилка!\nКоефіцієнт a обов\'язково має бути числом!" +
+							"\nВведіть корректне значення: ", "") );
+			 };
+			 document.getElementById("coef_A").value = putCommaDecSeparator(num);
+			 return num;
+		 };
+
+		  
+		 function getB(numValue) {
+			var num
+			num = putDotDecSeparator(numValue);
+		 	while ( !isNumeric(num) ) {
+		 		num = putDotDecSeparator( prompt("Помилка!\nКоефіцієнт b обов\'язково має бути числом!" +
+						"\nВведіть корректне значення: ", "") );
+		 	};
+		 	document.getElementById("coef_B").value = putCommaDecSeparator(num);
+		 	return num;
+		 };
+
+		  
+		 function getC(numValue) {
+			var num
+			num = putDotDecSeparator(numValue);
+		 	while ( !isNumeric(num) ) {
+		 		num = putDotDecSeparator( prompt("Помилка!\nВільний член c обов\'язково має бути числом!" + 
+						   "\nВведіть корректне значення: ", "") );
+		 	};
+		 	document.getElementById("num_C").value = putCommaDecSeparator(num);
+		 	return num;
+		 };
+		  
+		  
+		 function calculateRoot() {
+			 var tmpValue;
+			 replaceRoots = false;
+			 numA = getA( document.getElementById("coef_A").value );
+			 numB = getB( document.getElementById("coef_B").value );
+			 numC = getC( document.getElementById("num_C").value );
+
+			 discr = Math.pow(numB, 2) - 4 * numA * numC;
+
+			 if (discr >= 0) {
+			 	x1 = ( -numB - Math.sqrt(discr) ) / 2 / numA;
+			 	x2 = ( -numB + Math.sqrt(discr) ) /2 / numA;
+				 
+				if (x1 > x2){
+					tmpValue = x1;
+					x1 = x2;
+					x2 = tmpValue;
+					replaceRoots = true;				
+				};
+				 
+				if (x1 === x2) {
+					x2 ="";
+				};
+			 } else {
+			 	x1 = "Коренів немає.";
+			 	x2 = "";
+			 };			 
+		 } ;
+		  
+
+		 function showRoot() {
+			 	var strDiscr,
+					strEquation,
+					strOut;			 	
+			    clearMyDiv();			 
+			 	calculateRoot();
+			 	// створюємо новий елемент div
+    			// та додаємо у нього свій контент
+   				 var newDiv = document.createElement("div");
+			 	 newDiv.setAttribute("id", "root_div");	
+			 	// формуємо рівняння в стандартному записі
+			 	strEquation = 
+					( (Math.abs(numA) === 1) ? ((numA > 0) ? "" : "-" ) : 
+					   ( ((numA > 0) ? "" : "-") + unsignMathJax(numA) ) ) + "x^2" + 
+					( (numB != 0) ? ( ((numB >= 0) ? "+" : "-" ) + ( (Math.abs(numB) === 1) ? "" : 
+						unsignMathJax(numB) ) + "x") : "") +
+					( (numC != 0) ? ( ((numC >= 0) ? "+" : "-" ) + unsignMathJax(numC) ) : "");	
+			 	// формуємо стрічку дискримінанту у вигляді b^2-4ac
+				strDiscr = memberOfExpr(+numB).toLocaleString()  + "^2 - 4 \\cdot " + 
+					memberOfExpr(numA) + "\\cdot" +	memberOfExpr(numC);
+			 
+			    strOut = "<p>\\( \\color{darkgray}{ax^2+bx+c=0,}\\)</p>$$ " + strEquation + "=0\\text{ }, $$" +
+					"<p>\\( \\color{darkgray}{D=b^2-4ac}\\)</p> $$ D=" + strDiscr +  "=" +
+					( (discr < 0) ? ("-" + unsignMathJax(discr)) : unsignMathJax(discr) ) + "\\text{ }, ";
+			 
+			 	strOut += (discr < 0) ? ("$$<p>\\(D<0\\)  &nbsp;&mdash;&nbsp;дане рівняння коренів не має.</p>") :
+					(" \\text{  }\\sqrt{D}=" + unsignMathJax( Math.sqrt(discr) ) + "\\text{ }, $$" +
+					 " \\( \\color{darkgray}{x_1=\\frac{-b" + (replaceRoots ? "+" : "-") + "\\sqrt{D} }{2a}," +
+					 "\\text{  }" + 
+					 (isNumeric(x2) ? ("x_2=\\frac{-b" + (replaceRoots ? "-" : "+") + "\\sqrt{D} }{2a}}  ") : "}")
+					 + "\\)" + "<p>\\( x_{1}=\\frac{-" + memberOfExpr(numB) + (replaceRoots ? "+" : "-") + 
+					 unsignMathJax( Math.sqrt(discr) ) + "} {2\\cdot" + memberOfExpr(numA) + "}=" +
+					 ((x1 < 0) ? "-"  : "") + unsignMathJax(x1)  +  
+					 ( isNumeric(x2) ? "\\text{ }, \\)&nbsp;&nbsp; \\( x_{2}=\\frac{-" + 
+					 memberOfExpr(numB) + (replaceRoots ? "-" : "+") + 
+					 unsignMathJax( Math.sqrt(discr) ) + "} {2\\cdot" + memberOfExpr(numA) + "}=" + 
+					 ( ((x2 < 0) ? "-"  : "") + unsignMathJax(x2) )  : "") + ". \\)</p>");
+			 
+			
+			 	// виводимо відповідь в залежності від того, чи х2 - число 
+   				isNumeric(x2) ? 
+				 	newDiv.innerHTML = "<br/><p><strong><em>Розв&rsquo;язання:</em></strong></p>"  +
+			 			strOut + "<span><strong><em>Відповідь:&nbsp;</em></strong>" + 
+						x1.toLocaleString() + ";&nbsp;&nbsp;" + x2.toLocaleString() + ".</span>" :		 	
+			 	 	newDiv.innerHTML = "<br/><p><strong><em>Розв&rsquo;язання:</em></strong></p>"  +
+			 			strOut + "<span><strong><em>Відповідь:&nbsp;</em></strong>" + x1 + "</span>";		 
+       			// додаємо щойно створений елемент в дерево DOM
+    			my_div = document.getElementById("org_div1");
+    			document.body.insertBefore(newDiv, my_div);
+			 	// рендеремо формули MathJax-ом
+			 	MathJax.Hub.Queue(["Typeset",MathJax.Hub]); 			 	
+		 };
+		  
+	  </script>
+	  
+  </head>
+  <body >
+	  &nbsp;<br \>	  
+	  <div id="input_Form">
+		<hr/>
+		<h1>Квадратне рівняння</h1>  
+		<hr/>
+	  	<form>
+		  <p align="right">Коефіцієнт <span class="frm_label">a = </span>
+			  <input type="text" id="coef_A" onchange="clearMyDiv()"></p>
+		  
+		  <p align="right">Коефіцієнт <span class="frm_label">b = </span>
+			  <input type="text" id="coef_B" onchange="clearMyDiv()"></p>
+		  
+		  <p align="right">Вільний член <span class="frm_label">c = </span>
+			  <input type="text" id="num_C" onchange="clearMyDiv()"></p>
+		  
+		  <p align="right"><input type="button" id="goCalc" value="Розв&rsquo;язати" onclick="showRoot()"></p>
+		 
+		  <hr/> 	
+			<p class="footnote">Розв'язування за формулою коренів</p>
+	  	</form>
+	  </div>
+	  <div id='org_div1'>
+		  &nbsp;
+	  </div>	 	  		  
+  </body>
+</html>
