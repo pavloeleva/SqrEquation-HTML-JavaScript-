@@ -2,35 +2,34 @@
 <html>
 
 <head>
-    <title>Квадратне рівняння</title>
+    <title>Квадратне рівняння - Класна робота!</title>
     <meta charset="utf-8" />
 
-
-
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
     </script>
 
     <style>
         body {
             font-family: sans-serif;
-            /* background-color: #bbb; */
             text-align: center;
-            /*color: blue; /* #217AC0;    */
+            color: #ececec;
             font-size: 14px;
-        }
+            background-color: #022016; /* darkslategray; */
+            
+		}
         #input_Form {
             width: 35%;
             margin: auto;
-            color: #ffffff;
+            color: lightgray;
             font-family: arial;
             font-size: 16px;
             padding: 16px;
-            background-color: #217AC0;
         }
         h1 {
             text-align: center;
             font-weight: 100;
             letter-spacing: 0.1em;
+            font-size: 20px;
         }
         .frm_label {
             font-weight: bold;
@@ -44,6 +43,26 @@
             font-weight: 100;
             color: lightgray;
         }
+        .dark_text {
+            border: 1px solid green;
+            background-color: #022006;
+            color: lightgray;
+        }
+        hr {
+            border: 1px solid white;
+        }
+		.blue_hr{
+			/*border: 1px solid #0066cc;*/
+		}
+		.yellow_hr{
+			/*border: 1px solid #ffd700;*/
+		}
+        .classwork {
+            font-style: italic;
+            /*font-weight: bolder;*/
+            font-size: 22px;
+            letter-spacing: 0.4em;
+        }
     </style>
 
     <script>
@@ -52,9 +71,15 @@
             numA, // коефіцієнт 'а' квадратного рівняння
             numB, // коефіцієнт 'b' квадратного рівняння
             numC, // вільний члент 'с' квадратного рівняння
-            discr, // дискримыінант
+            discr, // дискримінант
             x1, // значення першого кореня, або стрічка "Коренів немає"
-            x2; // значення другого кореня, або "", якщо його немає
+            x2, // значення другого кореня, або "", якщо його немає
+            clrA, // колір 'a' при підсвітці
+            clrB, // колір 'b' при підсвітці
+            clrC, // колір 'c' при підсвітці
+            clrD, // колір дискримінанта або 'p' (в залежності від способу) при підсвітці
+            clrSqrtD, // колір кореня з дискримінанта або 'q' (в залежності від способу) при підсвітці
+            viewColor = false; // чи підсвічувати кольорами
 
         function isNumeric(n) {
             return !isNaN(parseFloat(n)) && isFinite(n)
@@ -87,11 +112,36 @@
                 "." + valStr.substring(i + 1, valStr.length);
         };
 
-
+		
+         //заміна десяткової крапки на кому для виводу 
         function putCommaDecSeparator(valStr) {
             var i = valStr.indexOf(".");
             return (i === -1) ? valStr : valStr.substring(0, i) +
                 "," + valStr.substring(i + 1, valStr.length);
+        };
+
+
+         // встановлення підсвітки кольорами
+        function setColor() {
+            if (viewColor) {
+                clrA = "#00FF00";
+                clrB = "#00FFFF";
+                clrC = "#FF4500";
+                clrD = "#b8a30b";//"#B8860B";
+                clrSqrtD = "#FFD700";
+				document.getElementById("top_hr").setAttribute("class", "blue_hr");
+				document.getElementById("bottom_hr").setAttribute("class", "yellow_hr");
+            } else {
+                clrA = clrB = clrC = clrD = clrSqrtD = document.body.style.color;
+				document.getElementById("top_hr").setAttribute("class", "");
+				document.getElementById("bottom_hr").setAttribute("class", "");
+            };
+            document.getElementById("lbl_A").style.color = clrA;
+            document.getElementById("coef_A").style.color = clrA;
+            document.getElementById("lbl_B").style.color = clrB;
+            document.getElementById("coef_B").style.color = clrB;
+            document.getElementById("num_C").style.color = clrC;
+            document.getElementById("lbl_C").style.color = clrC;
         };
 
 
@@ -134,6 +184,7 @@
         };
 
 
+         // обчислення коренів та формування стрічок 'x1', 'x2' з їх значенням
         function calculateRoot() {
             var tmpValue;
             replaceRoots = false;
@@ -158,13 +209,106 @@
                     x2 = "";
                 };
             } else {
-                x1 = "Коренів немає.";
+                x1 = "Коренів немає";
                 x2 = "";
             };
         };
 
 
-        function showRoot() {
+         // розв'язуєм способом зведення (використовуючи теорему Вієта [обернену])
+        function solveWithViet() {
+            var numP,
+                numQ,
+                strEquation,
+                strOut;
+            clearMyDiv();
+            calculateRoot();
+            numP = numB / numA;
+            numQ = numC / numA;
+
+            // створюємо новий елемент div
+            // та додаємо у нього свій контент
+            var newDiv = document.createElement("div");
+            newDiv.setAttribute("id", "root_div");
+
+            // формуємо рівняння в стандартному записі
+            strEquation =
+                "\\color{" + clrA + "}{" + ((Math.abs(numA) === 1) ? ((numA > 0) ? "" : "-") :
+                    (((numA > 0) ? "" : "-") + unsignMathJax(numA))) + "}x^2" +
+                ((numB != 0) ? (((numB >= 0) ? ("+" + "\\color{" + clrB + "}{") : ("\\color{" + clrB + "}{-")) +
+                ((Math.abs(numB) === 1) ? "" : unsignMathJax(numB)) + "}x") : "") +
+                ((numC != 0) ? (((numC >= 0) ? ("+" + "\\color{" + clrC + "}{") :
+                ("\\color{" + clrC + "}{-")) + unsignMathJax(numC) + "}") : "");
+			
+			strOut = "$$ \\textbf{Відповідь:}~~" + 
+				(isNumeric(x1) ? ((x1 >= 0) ? "" : ("-" + unsignMathJax(x1))) : ("\\textit{" + x1 + "}")) + 
+				(isNumeric(x2) ? (" ;~~" + (x2 >=0 ? "" : "-") + unsignMathJax(x2) + ".") : ".") + "$$" +
+				"<p class='footnote' style='text-align: center; color: darkgray;'>" +
+				"{ Результати обчислень наведено з точністю до 0,001. }</p>";
+
+            newDiv.innerHTML =
+                "$$\\textbf{Розв'язання:}$$" + "$$" + strEquation + "=0\\text{ .}$$" +
+                ( (numA != 1) ? ("\\(\\color{darkgray}{\\text{Зведемо дане рівняння до вигляду} }\\)" +
+                    "$$\\color{darkgray}{ x^2+\\color{" + clrD + "}{p}x+\\color{" + clrSqrtD + "}{q}=0\\text{ ,} }" +
+
+                    "~~ \\color{darkgray}{\\text{де}~~\\color{" + clrD + "}{p}=\\frac{\\color{" + clrB +
+                    "}{b}}{\\color{" + clrA + "}{a}}\\text{ }\\text{ і  } ~~\\color{" + clrSqrtD +
+                    "}{q}=\\frac{\\color{" + clrC + "}{c}}{" + "\\color{" + clrA + "}{a}}\\textit{ :}}$$" +
+
+                    "$$\\color{" + clrD + "}{p}=\\frac{\\color{" + clrB + "}{" + memberOfExpr(numB) + "}}{\\color{" +
+                    clrA + "}{" + memberOfExpr(numA) + "}}   =\\color{" + clrD + "}{" + (numP < 0 ? "-" : "") +
+                    unsignMathJax(numP) + "}" + "\\text{ ,}" +
+
+                    "~~~\\color{" + clrSqrtD + "}{q}=\\frac{\\color{" + clrC + "}{" + memberOfExpr(numC) + "}}{\\color{" +
+                    clrA + "}{" + memberOfExpr(numA) + "} }=" + "\\color{" + clrSqrtD + "}{" + (numQ < 0 ? "-" : "") +
+                    unsignMathJax(numQ) + "}~.$$") :
+                ("\\( \\color{" + clrA + "}{a}=1,~\\text{ позначимо }~\\color{" + clrD + "}{p}=\\color{" + clrB +
+                    "}{b},~ \\color{" + clrSqrtD + "}{q}=\\color{" + clrC + "}{c}.  \\)" +
+                    "$$\\color{darkgray}{\\text{Матимемо}~ x^2+\\color{" + clrD + "}{p}x+\\color{" + clrSqrtD +
+                    "}{q}=0\\text{ .} }$$"
+                ) ) +
+
+                "$$\\color{darkgray}{\\text{Отримали зведене квадратне рівняння}}$$" +
+                "$$x^2\\color{" + clrD + "}{" + (numP < 0 ? "-" : "+") +
+                ( (Math.abs(numP) === 1) ? "" : unsignMathJax(numP) ) + "}x\\color{" +
+                clrSqrtD + "}{" + (numQ < 0 ? "-" : "+") + unsignMathJax(numQ) + "}x=0.$$" +
+
+                "$$\\color{darkgray}{\\text{За теоремою, оберненою до теореми Вієта,}}$$" +
+                "$$\\color{darkgray}{" +
+                "\\left\\{ {\\begin{array}{*{20}c}" +
+                " {x_1  + x_2  =  - \\color{" + clrD + "}{p},} \\hfill  \\\\" +
+                "{x_1  \\cdot x_2  = \\color{" + clrSqrtD + "}{q};} \\hfill  \\\\" +
+                "\\end{array}} \\right." +
+                "}$$" +
+
+                "$$\\color{darkgray}{\\text{у нашому випадку}}$$" + "$$" +
+                "\\left\\{ {\\begin{array}{*{20}c}" +
+                " {x_1  + x_2  =  - \\color{" + clrD + "}{" + memberOfExpr(numP) + "}\\text{ ,}} \\hfill  \\\\" +
+                "{x_1  \\cdot x_2  = \\color{" + clrSqrtD + "}{" + (numQ < 0 ? "-" : "") +
+                unsignMathJax(numQ) + "}\\text{ .}} \\hfill  \\\\" +
+                "\\end{array}} \\right.$$" +
+
+				"$$" + ( (isNumeric(x1) ? 
+					  ( (isNumeric(x2) ? 
+						 ("\\text{Розв'язок даної системи:}~~x_1=" + ((x1 >= 0) ? "" : "-") +
+						  unsignMathJax(x1) + "~,~~x_2=" + ((x2 >= 0) ? "" : "-") + 
+						  unsignMathJax(x2) + ".") : 
+						 ("\\text{Розв'язок даної системи:}~~x=") + ((x1 >= 0) ? "" : "-") + 
+					   unsignMathJax(x1))  ) : 
+					("\\text{Дана система розв'язків не має.}")) ) + "$$" +
+				strOut;			
+
+            // додаємо щойно створений елемент в дерево DOM
+            my_div = document.getElementById("org_div1");
+            document.body.insertBefore(newDiv, my_div);
+            // рендеремо формули MathJax-ом			
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+        };
+
+
+         // розв'язуєм за формулою коренів (з окремим обчисленням дискримінанту)
+        function solveWithDiscr() {
             var strDiscr,
                 strEquation,
                 strOut;
@@ -174,77 +318,143 @@
             // та додаємо у нього свій контент
             var newDiv = document.createElement("div");
             newDiv.setAttribute("id", "root_div");
+
             // формуємо рівняння в стандартному записі
             strEquation =
-                ((Math.abs(numA) === 1) ? ((numA > 0) ? "" : "-") :
-                (((numA > 0) ? "" : "-") + unsignMathJax(numA))) + "x^2" +
-                ((numB != 0) ? (((numB >= 0) ? "+" : "-") + ((Math.abs(numB) === 1) ? "" :
-                unsignMathJax(numB)) + "x") : "") +
-                ((numC != 0) ? (((numC >= 0) ? "+" : "-") + unsignMathJax(numC)) : "");
+                "\\color{" + clrA + "}{" + ((Math.abs(numA) === 1) ? ((numA > 0) ? "" : "-") :
+                    (((numA > 0) ? "" : "-") + unsignMathJax(numA))) + "}x^2" +
+                ((numB != 0) ? (((numB >= 0) ? ("+" + "\\color{" + clrB + "}{") : ("\\color{" + clrB + "}{-")) +
+                ((Math.abs(numB) === 1) ? "" : unsignMathJax(numB)) + "}x") : "") +
+                ((numC != 0) ? (((numC >= 0) ? ("+" + "\\color{" + clrC + "}{") :
+                ("\\color{" + clrC + "}{-")) + unsignMathJax(numC) + "}") : "");
+
             // формуємо стрічку дискримінанту у вигляді b^2-4ac
-            strDiscr = memberOfExpr(+numB).toLocaleString() + "^2 - 4 \\cdot " +
-                memberOfExpr(numA) + "\\cdot" + memberOfExpr(numC);
+            strDiscr = "\\color{" + clrB + "}{" + memberOfExpr(+numB).toLocaleString() + "}^2 - 4 \\cdot\\color{" +
+                clrA + "}{" + memberOfExpr(numA) + "}\\cdot\\color{" + clrC + "}{" + memberOfExpr(numC) + "}";
 
-            strOut = "<p>\\( \\color{darkgray}{ax^2+bx+c=0,}\\)</p>$$ " + strEquation + "=0\\text{ }, $$" +
-                "<p>\\( \\color{darkgray}{D=b^2-4ac}\\)</p> $$ D=" + strDiscr + "=" +
-                ((discr < 0) ? ("-" + unsignMathJax(discr)) : unsignMathJax(discr)) + "\\text{ }, ";
+            // формуємо вивід розв'язку рівняння
+            strOut =
+                "<p>\\( \\color{darkgray}{\\color{" + clrA + "}{a}x^2+\\color{" + clrB +
+                "}{b}x+\\color{" + clrC + "}{c}=0,}\\)</p>$$ " + strEquation + "=0\\text{ }, $$" +
+                "<p>\\( \\color{darkgray}{\\color{" + clrD + "}{D}=\\color{" + clrB + "}{b}^2-4\\color{" + clrA +
+                "}{a}\\color{" + clrC + "}{" + "c},}\\)</p>" +
 
-            strOut += (discr < 0) ? ("$$<p>\\(D<0\\)  &nbsp;&mdash;&nbsp;дане рівняння коренів не має.</p>") :
-                (" \\text{  }\\sqrt{D}=" + unsignMathJax(Math.sqrt(discr)) + "\\text{ }, $$" +
-                " \\( \\color{darkgray}{x_1=\\frac{-b" + (replaceRoots ? "+" : "-") + "\\sqrt{D} }{2a}," +
-                "\\text{  }" +
-                (isNumeric(x2) ? ("x_2=\\frac{-b" + (replaceRoots ? "-" : "+") + "\\sqrt{D} }{2a}}  ") : "}") + "\\)" + "<p>\\( x_{1}=\\frac{-" + memberOfExpr(numB) + (replaceRoots ? "+" : "-") +
-                unsignMathJax(Math.sqrt(discr)) + "} {2\\cdot" + memberOfExpr(numA) + "}=" +
-                ((x1 < 0) ? "-" : "") + unsignMathJax(x1) +
-                (isNumeric(x2) ? "\\text{ }, \\)&nbsp;&nbsp; \\( x_{2}=\\frac{-" +
-                    memberOfExpr(numB) + (replaceRoots ? "-" : "+") +
-                    unsignMathJax(Math.sqrt(discr)) + "} {2\\cdot" + memberOfExpr(numA) + "}=" +
-                    (((x2 < 0) ? "-" : "") + unsignMathJax(x2)) : "") + ". \\)</p>");
+                " $$ \\color{" + clrD + "}{D}=" + strDiscr + "=" +
+                ( (discr < 0) ? ("\\color{" + clrD + "}{-" + unsignMathJax(discr) + "}") :
+                  ("\\color{" + clrD + "}{" + unsignMathJax(discr) + "}") ) + "\\text{ }, ";
 
+            strOut +=
+                (discr < 0) ? ("$$<p>\\(\\color{" +
+                clrD + "}{D}<0\\)  &nbsp;&mdash;&nbsp;дане рівняння коренів не має.</p>") :
+                (" \\text{  }\\color{" + clrSqrtD + "}{\\sqrt{D}}=" +
+                "\\color{" + clrSqrtD + "}{" + unsignMathJax( Math.sqrt(discr) ) + "}\\text{ }, $$" +
 
-            // виводимо відповідь в залежності від того, чи х2 - число 
-            isNumeric(x2) ?
-                newDiv.innerHTML = "<br/><p><strong><em>Розв&rsquo;язання:</em></strong></p>" +
-                strOut + "<span><strong><em>Відповідь:&nbsp;</em></strong>" +
-                x1.toLocaleString() + ";&nbsp;&nbsp;" + x2.toLocaleString() + ".</span>" :
-                newDiv.innerHTML = "<br/><p><strong><em>Розв&rsquo;язання:</em></strong></p>" +
-                strOut + "<span><strong><em>Відповідь:&nbsp;</em></strong>" + x1 + "</span>";
+                " \\( \\color{darkgray}{x_1=\\frac{-\\color{" + clrB + "}{b}" + (replaceRoots ? "+" : "-") +
+                "\\color{" + clrSqrtD + "}{\\sqrt{D} }}{2\\color{" + clrA + "}{a}}," + "\\text{  }" +
+                (isNumeric(x2) ? ("x_2=\\frac{-\\color{" + clrB + "}{b}" + (replaceRoots ? "-" : "+") + "\\color{" +
+                    clrSqrtD + "}{\\sqrt{D} }}{2\\color{" + clrA + "}{a}}}") : "}") + "\\)" +
+
+                "<p>\\(x_{1}=\\frac{-\\color{" + clrB + "}{" + memberOfExpr(numB) +
+                (replaceRoots ? "}+" : "}-") + "\\color{" + clrSqrtD + "}{" + unsignMathJax(Math.sqrt(discr)) +
+                "} } {2\\cdot\\color{" + clrA + "}{" + memberOfExpr(numA) + "}}=" + ( (x1 < 0) ? "-" : "") +
+                unsignMathJax(x1) +
+
+                (isNumeric(x2) ? "\\text{ }, \\)&nbsp;&nbsp; \\( x_{2}=\\frac{-\\color{" + clrB +
+                    "}{" + memberOfExpr(numB) + "}" + (replaceRoots ? "-" : "+") + "\\color{" + clrSqrtD + "}{" +
+                    unsignMathJax(Math.sqrt(discr)) + "}}{2\\cdot\\color{" + clrA + "}{" + memberOfExpr(numA) + "}}=" +
+                    ( ( (x2 < 0) ? "-" : "") + unsignMathJax(x2) ) : "") + ". \\)</p>");
+
+            // виводимо розв'язання і відповідь            
+                newDiv.innerHTML = "$$\\textbf{Розв&rsquo;язання:}$$" +
+                    strOut + "$$ \\textbf{Відповідь:}~~" + 
+				(isNumeric(x1) ? ((x1 >= 0) ? "" : ("-" + unsignMathJax(x1))) : ("\\textit{" + x1 + "}")) + 
+				(isNumeric(x2) ? (" ;~~" + (x2 >=0 ? "" : "-") + unsignMathJax(x2) + ".") : ".") + "$$" +
+				"<p class='footnote' style='text-align: center; color: darkgray;'>" +
+				"{ Результати обчислень наведено з точністю до 0,001. }</p>";
+
             // додаємо щойно створений елемент в дерево DOM
             my_div = document.getElementById("org_div1");
             document.body.insertBefore(newDiv, my_div);
             // рендеремо формули MathJax-ом
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         };
+
+
+         // обробка клацання по checkbox "кольори"
+        function getViewColor() {
+            viewColor = document.getElementById("highligth").checked;
+            setColor();
+            if (document.getElementById("root_div")) {
+                solveWith();				
+                window.getSelection().removeAllRanges();
+            };
+        };
+
+
+         // вибір способу в залежності від обраного input type=radio
+        function solveWith() {
+            var elDiscr = document.getElementById("radioDiscr"),
+                val = elDiscr.checked ? "methodDiscr" : "methodViet";
+            if (val === "methodDiscr") {
+                solveWithDiscr();
+            };
+            if (val === "methodViet") {
+                solveWithViet();
+            };
+			document.getElementById("org_div1").scrollIntoView();
+        }
     </script>
 
 </head>
 
 <body>
-    &nbsp;
-    <br \>
+    <br />
+    <div class="classwork">Класна робота<span style="font-size: 18px;">!</span>
+    </div>
+
     <div id="input_Form">
-        <hr/>
-        <h1>Квадратне рівняння</h1> 
-        <hr/>
+
+        <h1><em>Розв'язування квадратного рівняння</em></h1> $$ax^2+bx+c=0$$
         <form>
-            <p align="right">Коефіцієнт <span class="frm_label">a = </span>
-                <input type="text" id="coef_A" onchange="clearMyDiv()">
+            <p align="right">Коефіцієнт <span class="frm_label" id="lbl_A">a = </span>
+                <input type="text" autofocus id="coef_A" oninput="clearMyDiv()" class="dark_text">
             </p>
 
-            <p align="right">Коефіцієнт <span class="frm_label">b = </span>
-                <input type="text" id="coef_B" onchange="clearMyDiv()">
+            <p align="right">Коефіцієнт <span class="frm_label" id="lbl_B">b = </span>
+                <input type="text" id="coef_B" oninput="clearMyDiv()" class="dark_text">
             </p>
 
-            <p align="right">Вільний член <span class="frm_label">c = </span>
-                <input type="text" id="num_C" onchange="clearMyDiv()">
+            <p align="right">Вільний член <span class="frm_label" id="lbl_C">c = </span>
+                <input type="text" id="num_C" oninput="clearMyDiv()" class="dark_text">
             </p>
 
             <p align="right">
-                <input type="button" id="goCalc" value="Розв&rsquo;язати" onclick="showRoot()">
+                <input type="button" id="goCalc" value="Розв&rsquo;язати" onclick="solveWith()">
             </p>
 
-            <hr/>
-            <p class="footnote">Розв'язування за формулою коренів</p>
+            <hr id="top_hr"/>
+            <table width="100%">
+                <tr>
+                    <td style="text-align: left;">
+                        <span class="footnote">
+							<input type="radio" name="radioMethod" id="radioDiscr" value="methodDiscr"
+								   onclick="getViewColor()" checked><label for="radioDiscr">за формулою коренів</label>
+						</span>
+                        <br />
+                        <span class="footnote">
+							<input type="radio" name="radioMethod" id="radioViet" onclick="getViewColor()" 
+								   value="methodViet"><label for="radioViet">зведенням коефіцієнтів</label>
+						</span>
+                    </td>
+                    <td style="text-align: right;">
+                        <label title="Увімкнути підсвітку кольорами">
+                            <input type="checkbox" id="highligth" onchange="getViewColor()">
+                            <span class="footnote"> Кольори</span>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+            <hr id="bottom_hr"/>
         </form>
     </div>
     <div id='org_div1'>
