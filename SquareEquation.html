@@ -14,9 +14,9 @@
             text-align: center;
             color: #ececec;
             font-size: 14px;
-            background-color: #022016; /* darkslategray; */
-            
-		}
+            background-color: #022016;
+            /* darkslategray; */
+        }
         #input_Form {
             width: 35%;
             margin: auto;
@@ -51,12 +51,12 @@
         hr {
             border: 1px solid white;
         }
-		.blue_hr{
-			/*border: 1px solid #0066cc;*/
-		}
-		.yellow_hr{
-			/*border: 1px solid #ffd700;*/
-		}
+        .blue_hr {
+            /*border: 1px solid #0066cc;*/
+        }
+        .yellow_hr {
+            /*border: 1px solid #ffd700;*/
+        }
         .classwork {
             font-style: italic;
             /*font-weight: bolder;*/
@@ -112,7 +112,7 @@
                 "." + valStr.substring(i + 1, valStr.length);
         };
 
-		
+
          //заміна десяткової крапки на кому для виводу 
         function putCommaDecSeparator(valStr) {
             var i = valStr.indexOf(".");
@@ -127,14 +127,14 @@
                 clrA = "#00FF00";
                 clrB = "#00FFFF";
                 clrC = "#FF4500";
-                clrD = "#b8a30b";//"#B8860B";
+                clrD = "#b8a30b"; //"#B8860B";
                 clrSqrtD = "#FFD700";
-				document.getElementById("top_hr").setAttribute("class", "blue_hr");
-				document.getElementById("bottom_hr").setAttribute("class", "yellow_hr");
+                document.getElementById("top_hr").setAttribute("class", "blue_hr");
+                document.getElementById("bottom_hr").setAttribute("class", "yellow_hr");
             } else {
                 clrA = clrB = clrC = clrD = clrSqrtD = document.body.style.color;
-				document.getElementById("top_hr").setAttribute("class", "");
-				document.getElementById("bottom_hr").setAttribute("class", "");
+                document.getElementById("top_hr").setAttribute("class", "");
+                document.getElementById("bottom_hr").setAttribute("class", "");
             };
             document.getElementById("lbl_A").style.color = clrA;
             document.getElementById("coef_A").style.color = clrA;
@@ -239,16 +239,16 @@
                 ((Math.abs(numB) === 1) ? "" : unsignMathJax(numB)) + "}x") : "") +
                 ((numC != 0) ? (((numC >= 0) ? ("+" + "\\color{" + clrC + "}{") :
                 ("\\color{" + clrC + "}{-")) + unsignMathJax(numC) + "}") : "");
-			
-			strOut = "$$ \\textbf{Відповідь:}~~" + 
-				(isNumeric(x1) ? ((x1 >= 0) ? "" : ("-" + unsignMathJax(x1))) : ("\\textit{" + x1 + "}")) + 
-				(isNumeric(x2) ? (" ;~~" + (x2 >=0 ? "" : "-") + unsignMathJax(x2) + ".") : ".") + "$$" +
-				"<p class='footnote' style='text-align: center; color: darkgray;'>" +
-				"{ Результати обчислень наведено з точністю до 0,001. }</p>";
+
+            strOut = "$$ \\textbf{Відповідь:}~~" +
+                (isNumeric(x1) ? ((x1 >= 0) ? "" : ("-" + unsignMathJax(x1))) : ("\\textit{" + x1 + "}")) +
+                (isNumeric(x2) ? (" ;~~" + (x2 >= 0 ? "" : "-") + unsignMathJax(x2) + ".") : ".") + "$$" +
+                "<p class='footnote' style='text-align: center; color: darkgray;'>" +
+                "{ Результати обчислень наведено з точністю до 0,001. }</p>";
 
             newDiv.innerHTML =
                 "$$\\textbf{Розв'язання:}$$" + "$$" + strEquation + "=0\\text{ .}$$" +
-                ( (numA != 1) ? ("\\(\\color{darkgray}{\\text{Зведемо дане рівняння до вигляду} }\\)" +
+                ((numA != 1) ? ("\\(\\color{darkgray}{\\text{Зведемо дане рівняння до вигляду} }\\)" +
                     "$$\\color{darkgray}{ x^2+\\color{" + clrD + "}{p}x+\\color{" + clrSqrtD + "}{q}=0\\text{ ,} }" +
 
                     "~~ \\color{darkgray}{\\text{де}~~\\color{" + clrD + "}{p}=\\frac{\\color{" + clrB +
@@ -266,14 +266,14 @@
                     "}{b},~ \\color{" + clrSqrtD + "}{q}=\\color{" + clrC + "}{c}.  \\)" +
                     "$$\\color{darkgray}{\\text{Матимемо}~ x^2+\\color{" + clrD + "}{p}x+\\color{" + clrSqrtD +
                     "}{q}=0\\text{ .} }$$"
-                ) ) +
+                )) +
 
-                "$$\\color{darkgray}{\\text{Отримали зведене квадратне рівняння}}$$" +
+            "$$\\color{darkgray}{\\text{Отримали зведене квадратне рівняння}}$$" +
                 "$$x^2\\color{" + clrD + "}{" + (numP < 0 ? "-" : "+") +
-                ( (Math.abs(numP) === 1) ? "" : unsignMathJax(numP) ) + "}x\\color{" +
+                ((Math.abs(numP) === 1) ? "" : unsignMathJax(numP)) + "}x\\color{" +
                 clrSqrtD + "}{" + (numQ < 0 ? "-" : "+") + unsignMathJax(numQ) + "}x=0.$$" +
 
-                "$$\\color{darkgray}{\\text{За теоремою, оберненою до теореми Вієта,}}$$" +
+            "$$\\color{darkgray}{\\text{За теоремою, оберненою до теореми Вієта,}}$$" +
                 "$$\\color{darkgray}{" +
                 "\\left\\{ {\\begin{array}{*{20}c}" +
                 " {x_1  + x_2  =  - \\color{" + clrD + "}{p},} \\hfill  \\\\" +
@@ -281,22 +281,22 @@
                 "\\end{array}} \\right." +
                 "}$$" +
 
-                "$$\\color{darkgray}{\\text{у нашому випадку}}$$" + "$$" +
+            "$$\\color{darkgray}{\\text{у нашому випадку}}$$" + "$$" +
                 "\\left\\{ {\\begin{array}{*{20}c}" +
                 " {x_1  + x_2  =  - \\color{" + clrD + "}{" + memberOfExpr(numP) + "}\\text{ ,}} \\hfill  \\\\" +
                 "{x_1  \\cdot x_2  = \\color{" + clrSqrtD + "}{" + (numQ < 0 ? "-" : "") +
                 unsignMathJax(numQ) + "}\\text{ .}} \\hfill  \\\\" +
                 "\\end{array}} \\right.$$" +
 
-				"$$" + ( (isNumeric(x1) ? 
-					  ( (isNumeric(x2) ? 
-						 ("\\text{Розв'язок даної системи:}~~x_1=" + ((x1 >= 0) ? "" : "-") +
-						  unsignMathJax(x1) + "~,~~x_2=" + ((x2 >= 0) ? "" : "-") + 
-						  unsignMathJax(x2) + ".") : 
-						 ("\\text{Розв'язок даної системи:}~~x=") + ((x1 >= 0) ? "" : "-") + 
-					   unsignMathJax(x1))  ) : 
-					("\\text{Дана система розв'язків не має.}")) ) + "$$" +
-				strOut;			
+            "$$" + ((isNumeric(x1) ?
+                ((isNumeric(x2) ?
+                    ("\\text{Розв'язок даної системи:}~~x_1=" + ((x1 >= 0) ? "" : "-") +
+                        unsignMathJax(x1) + "~,~~x_2=" + ((x2 >= 0) ? "" : "-") +
+                        unsignMathJax(x2) + ".") :
+                    ("\\text{Розв'язок даної системи:}~~x=") + ((x1 >= 0) ? "" : "-") +
+                    unsignMathJax(x1))) :
+                ("\\text{Дана система розв'язків не має.}"))) + "$$" +
+                strOut;
 
             // додаємо щойно створений елемент в дерево DOM
             my_div = document.getElementById("org_div1");
@@ -339,15 +339,15 @@
                 "<p>\\( \\color{darkgray}{\\color{" + clrD + "}{D}=\\color{" + clrB + "}{b}^2-4\\color{" + clrA +
                 "}{a}\\color{" + clrC + "}{" + "c},}\\)</p>" +
 
-                " $$ \\color{" + clrD + "}{D}=" + strDiscr + "=" +
-                ( (discr < 0) ? ("\\color{" + clrD + "}{-" + unsignMathJax(discr) + "}") :
-                  ("\\color{" + clrD + "}{" + unsignMathJax(discr) + "}") ) + "\\text{ }, ";
+            " $$ \\color{" + clrD + "}{D}=" + strDiscr + "=" +
+                ((discr < 0) ? ("\\color{" + clrD + "}{-" + unsignMathJax(discr) + "}") :
+                ("\\color{" + clrD + "}{" + unsignMathJax(discr) + "}")) + "\\text{ }, ";
 
             strOut +=
                 (discr < 0) ? ("$$<p>\\(\\color{" +
                 clrD + "}{D}<0\\)  &nbsp;&mdash;&nbsp;дане рівняння коренів не має.</p>") :
                 (" \\text{  }\\color{" + clrSqrtD + "}{\\sqrt{D}}=" +
-                "\\color{" + clrSqrtD + "}{" + unsignMathJax( Math.sqrt(discr) ) + "}\\text{ }, $$" +
+                "\\color{" + clrSqrtD + "}{" + unsignMathJax(Math.sqrt(discr)) + "}\\text{ }, $$" +
 
                 " \\( \\color{darkgray}{x_1=\\frac{-\\color{" + clrB + "}{b}" + (replaceRoots ? "+" : "-") +
                 "\\color{" + clrSqrtD + "}{\\sqrt{D} }}{2\\color{" + clrA + "}{a}}," + "\\text{  }" +
@@ -356,21 +356,21 @@
 
                 "<p>\\(x_{1}=\\frac{-\\color{" + clrB + "}{" + memberOfExpr(numB) +
                 (replaceRoots ? "}+" : "}-") + "\\color{" + clrSqrtD + "}{" + unsignMathJax(Math.sqrt(discr)) +
-                "} } {2\\cdot\\color{" + clrA + "}{" + memberOfExpr(numA) + "}}=" + ( (x1 < 0) ? "-" : "") +
+                "} } {2\\cdot\\color{" + clrA + "}{" + memberOfExpr(numA) + "}}=" + ((x1 < 0) ? "-" : "") +
                 unsignMathJax(x1) +
 
                 (isNumeric(x2) ? "\\text{ }, \\)&nbsp;&nbsp; \\( x_{2}=\\frac{-\\color{" + clrB +
                     "}{" + memberOfExpr(numB) + "}" + (replaceRoots ? "-" : "+") + "\\color{" + clrSqrtD + "}{" +
                     unsignMathJax(Math.sqrt(discr)) + "}}{2\\cdot\\color{" + clrA + "}{" + memberOfExpr(numA) + "}}=" +
-                    ( ( (x2 < 0) ? "-" : "") + unsignMathJax(x2) ) : "") + ". \\)</p>");
+                    (((x2 < 0) ? "-" : "") + unsignMathJax(x2)) : "") + ". \\)</p>");
 
             // виводимо розв'язання і відповідь            
-                newDiv.innerHTML = "$$\\textbf{Розв&rsquo;язання:}$$" +
-                    strOut + "$$ \\textbf{Відповідь:}~~" + 
-				(isNumeric(x1) ? ((x1 >= 0) ? "" : ("-" + unsignMathJax(x1))) : ("\\textit{" + x1 + "}")) + 
-				(isNumeric(x2) ? (" ;~~" + (x2 >=0 ? "" : "-") + unsignMathJax(x2) + ".") : ".") + "$$" +
-				"<p class='footnote' style='text-align: center; color: darkgray;'>" +
-				"{ Результати обчислень наведено з точністю до 0,001. }</p>";
+            newDiv.innerHTML = "$$\\textbf{Розв&rsquo;язання:}$$" +
+                strOut + "$$ \\textbf{Відповідь:}~~" +
+                (isNumeric(x1) ? ((x1 >= 0) ? "" : ("-" + unsignMathJax(x1))) : ("\\textit{" + x1 + "}")) +
+                (isNumeric(x2) ? (" ;~~" + (x2 >= 0 ? "" : "-") + unsignMathJax(x2) + ".") : ".") + "$$" +
+                "<p class='footnote' style='text-align: center; color: darkgray;'>" +
+                "{ Результати обчислень наведено з точністю до 0,001. }</p>";
 
             // додаємо щойно створений елемент в дерево DOM
             my_div = document.getElementById("org_div1");
@@ -385,7 +385,7 @@
             viewColor = document.getElementById("highligth").checked;
             setColor();
             if (document.getElementById("root_div")) {
-                solveWith();				
+                solveWith();
                 window.getSelection().removeAllRanges();
             };
         };
@@ -401,7 +401,7 @@
             if (val === "methodViet") {
                 solveWithViet();
             };
-			document.getElementById("org_div1").scrollIntoView();
+            document.getElementById("org_div1").scrollIntoView();
         }
     </script>
 
@@ -432,19 +432,19 @@
                 <input type="button" id="goCalc" value="Розв&rsquo;язати" onclick="solveWith()">
             </p>
 
-            <hr id="top_hr"/>
+            <hr id="top_hr" />
             <table width="100%">
                 <tr>
                     <td style="text-align: left;">
                         <span class="footnote">
-							<input type="radio" name="radioMethod" id="radioDiscr" value="methodDiscr"
-								   onclick="getViewColor()" checked><label for="radioDiscr">за формулою коренів</label>
-						</span>
+			    <input type="radio" name="radioMethod" id="radioDiscr" value="methodDiscr"
+			        onclick="getViewColor()" checked><label for="radioDiscr">за формулою коренів</label>
+			</span>
                         <br />
                         <span class="footnote">
-							<input type="radio" name="radioMethod" id="radioViet" onclick="getViewColor()" 
-								   value="methodViet"><label for="radioViet">зведенням коефіцієнтів</label>
-						</span>
+			    <input type="radio" name="radioMethod" id="radioViet" onclick="getViewColor()" 
+				value="methodViet"><label for="radioViet">зведенням коефіцієнтів</label>
+			</span>
                     </td>
                     <td style="text-align: right;">
                         <label title="Увімкнути підсвітку кольорами">
@@ -454,7 +454,7 @@
                     </td>
                 </tr>
             </table>
-            <hr id="bottom_hr"/>
+            <hr id="bottom_hr" />
         </form>
     </div>
     <div id='org_div1'>
